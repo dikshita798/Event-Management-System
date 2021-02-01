@@ -10,3 +10,5 @@ router.get('/events', adminController.getEvents);
 
 router.post('/add-volunteer', adminController.addVolunteer);
 router.post('/add-event', adminController.addEvent);
+
+module.exports = router

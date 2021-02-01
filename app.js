@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 
-const authRoutes = require('./routes/auth');
+//const authRoutes = require('./routes/auth');
 const adminRoutes = require("./routes/admin");
 const volunteerRoutes = require("./routes/volunteer");
 const participantRoutes = require('./routes/participant');
