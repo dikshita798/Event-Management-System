@@ -1,14 +1,11 @@
-const mongodb = require('mongodb')
-
 const User = require('../models/user')
 const Event = require('../models/event')
 
 exports.getParticipants = (req, res) => {
   User.findByType('participant')
     .then((users) => {
-      console.log(users)
       res.json({
-        status: 'success',
+        participants: users,
       })
     })
     .catch((err) => {
@@ -19,9 +16,8 @@ exports.getParticipants = (req, res) => {
 exports.getVolunteers = (req, res) => {
   User.findByType('volunteer')
     .then((users) => {
-      console.log(users)
       res.json({
-        status: 'success',
+        volunteers: users,
       })
     })
     .catch((err) => {
@@ -32,9 +28,8 @@ exports.getVolunteers = (req, res) => {
 exports.getEvents = (req, res) => {
   Event.fetchAll()
     .then((events) => {
-      console.log(events)
       res.json({
-        status: 'success',
+        events: events,
       })
     })
     .catch((err) => {
