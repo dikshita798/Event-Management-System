@@ -4,7 +4,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 
-//const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/auth')
 const adminRoutes = require('./routes/admin')
 const volunteerRoutes = require('./routes/volunteer')
 const participantRoutes = require('./routes/participant')
@@ -39,7 +39,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 )
 
-//app.use(authRoutes);
+app.use(authRoutes)
 app.use('/admin', adminRoutes)
 app.use('/volunteer', volunteerRoutes)
 app.use('/participant', participantRoutes)

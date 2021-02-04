@@ -1,26 +1,33 @@
-//common 
+common 
 
 /login
 /logout
 /register
 ---------------------------
-//admin
-
-get /admin/participants  (list the participants)
-get /admin/volunteers (list the volunteers)
-get /admin/events (list the events)
-post /admin/add-volunteer (add a volunteer)
-post /admin/add-event (add an event)
+admin
+/admin/...
+get /participants  (list the participants)
+get /volunteers (list the volunteers)
+get /events (list the events)
+post /add-volunteer (add a volunteer)
+post /add-event (add an event)
+patch /edit-event/:eventId
+delete /delete-event/:eventId
+patch /edit-volunteer/:volunteerId
+delete /delete-volunteer/:volunteerId
+get /:eventId
+get /:userId
 ---------------------------
-//volunteer
-
-get /volunteer/participants (list the participants for the )
-get /volunteer/participate (handle events tab for volunteer)
-get /volunteer/:eventId (get event description)
-post /volunteer/register/:eventId (register for event)
+volunteer
+/volunteer/..
+get /participants (list the participants for the )
+get /participate (handle events tab for volunteer)
+get /:eventId (get event description)
+post /register/:eventId (register for event)
+get /:userId
 ------------------------------------
-//participant
-
-get /participant/:eventId (get event description)
-post /participant/register/:eventId (register for event)
+participant
+/participant/..
+get /:eventId (get event description)
+post /register/:eventId (register for event)
 

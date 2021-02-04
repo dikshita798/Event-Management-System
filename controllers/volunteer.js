@@ -13,9 +13,8 @@ exports.participate = (req, res) => {
           const events = eventsData.filter(
             (event) => event.organizer !== volunteer.name
           )
-          console.log(events)
           res.json({
-            status: 'success',
+            events: events,
           })
         })
         .catch((err) => {

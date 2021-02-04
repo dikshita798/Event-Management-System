@@ -7,9 +7,8 @@ exports.getEvent = (req, res) => {
   const eventId = req.params.eventId
   Event.findById(eventId)
     .then((event) => {
-      console.log(event)
       res.json({
-        status: 'success',
+        event: event,
       })
     })
     .catch((err) => {
@@ -24,12 +23,11 @@ exports.registerEvent = (req, res) => {
     Event.findById(eventId)
       .then((event) => {
         let registered = participantData.events
-        if (registered === undefined) {
-          registered = [event.name]
+        if (registered === undefined || registered === null) {
+          registered = [event._id]
         } else {
-          registered.push(event.name)
+          registered.push(event._id)
         }
-        console.log(registered)
         const participant = new User(
           participantData.name,
           participantData.email,
@@ -41,8 +39,20 @@ exports.registerEvent = (req, res) => {
         participant
           .save()
           .then((result) => {
-            res.json({
-              status: 'success',
+            User.findById(participantData._id).then((participant) => {
+              Event.fetchAll().then((eventsData) => {
+                const events = []
+                eventsData.forEach((event) => {
+                  participant.events.forEach((e) => {
+                    if (e.equals(event._id)) {
+                      events.push(event)
+                    }
+                  })
+                })
+                res.json({
+                  events: events,
+                })
+              })
             })
           })
           .catch((err) => {

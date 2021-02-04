@@ -43,9 +43,15 @@ exports.addVolunteer = (req, res) => {
   volunteer
     .save()
     .then((result) => {
-      res.json({
-        status: 'success',
-      })
+      User.findByType('volunteer')
+        .then((users) => {
+          res.json({
+            volunteers: users,
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     })
     .catch((err) => {
       console.log(err)
@@ -63,9 +69,15 @@ exports.addEvent = (req, res) => {
   event
     .save()
     .then((result) => {
-      res.json({
-        status: 'success',
-      })
+      Event.fetchAll()
+        .then((events) => {
+          res.json({
+            events: events,
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     })
     .catch((err) => {
       console.log(err)
