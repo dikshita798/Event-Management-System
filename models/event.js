@@ -50,5 +50,17 @@ class Event {
         console.log(err)
       })
   }
+  static deleteById(id){
+    const db = getDb()
+    return db
+    .collection('events')
+    .deleteOne({ _id: new mongodb.ObjectID(id)})
+    .then(result => {
+      console.log('Deleted')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
 }
 module.exports = Event
