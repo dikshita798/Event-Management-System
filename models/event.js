@@ -3,19 +3,27 @@ const mongodb = require('mongodb')
 const getDb = require('../utils/database').getDb
 
 class Event {
-  constructor(name, startdate, enddate, organizer, description) {
+  constructor(name, startdate, enddate, organizer, description, id) {
     this.name = name
     this.startdate = startdate
     this.enddate = enddate
     this.organizer = organizer
     this.description = description
+    this._id = id
   }
 
   save() {
     const db = getDb()
-    return db
-      .collection('events')
-      .insertOne(this)
+    let dbOp
+    if (this._id) {
+      dbOp = db
+        .collection('events')
+        .updateOne({ _id: new mongodb.ObjectId(this._id) }, { $set: this })
+    } else {
+      dbOp = db.collection('events').insertOne(this)
+    }
+
+    return dbOp
       .then((result) => {
         //console.log(result);
       })
@@ -50,17 +58,18 @@ class Event {
         console.log(err)
       })
   }
-  static deleteById(id){
+  static deleteById(id) {
     const db = getDb()
     return db
-    .collection('events')
-    .deleteOne({ _id: new mongodb.ObjectID(id)})
-    .then(result => {
-      console.log('Deleted')
-    })
-    .catch(err => {
-      console.log(err)
-    })
+      .collection('events')
+      .deleteOne({ _id: new mongodb.ObjectID(id) })
+      .then((result) => {
+        //console.log(result)
+        console.log('Deleted!')
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 }
 module.exports = Event

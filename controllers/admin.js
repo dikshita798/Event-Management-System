@@ -78,10 +78,9 @@ exports.addEvent = (req, res) => {
 exports.deleteEvent = (req, res) => {
   const eventId = req.params.eventId
   Event.deleteById(eventId)
-    .then((event) => {
-      console.log(event)
+    .then((result) => {
       res.json({
-        status: 'success',
+        status: 'Event Deleted',
       })
     })
     .catch((err) => {
@@ -92,16 +91,14 @@ exports.deleteEvent = (req, res) => {
 exports.deleteVolunteer = (req, res) => {
   const userId = req.params.userId
   User.deleteById(userId)
-  .then((user) => {
-    console.log(user)
-    res.json({
-      status: 'success',
+    .then((result) => {
+      res.json({
+        status: 'Volunteer Deleted',
+      })
     })
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-
+    .catch((err) => {
+      console.log(err)
+    })
 }
 
 exports.getUser = (req, res) => {
@@ -119,45 +116,76 @@ exports.getUser = (req, res) => {
 }
 exports.editEvent = (req, res) => {
   const eventId = req.params.eventId
-  try {
-    const result = Event.updateOne({_id: eventId},{
-      $set:{
-        name: req.body.name,
-        startdate: req.body.startdate,
-        enddate: req.body.enddate,
-        organizer: req.body.organizer,
-        description: req.body.description
-      }
+  const name = req.body.name
+  const startdate = req.body.startdate
+  const enddate = req.body.enddate
+  const organizer = req.body.organizer
+  const description = req.body.description
+  Event.findById(eventId)
+    .then((eventData) => {
+      const event = new Event(
+        name,
+        startdate,
+        enddate,
+        organizer,
+        description,
+        eventData._id
+      )
+      event
+        .save()
+        .then((result) => {
+          Event.fetchAll()
+            .then((events) => {
+              res.json({
+                events: events,
+              })
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     })
-    res.json({
-      status: result
+    .catch((err) => {
+      console.log(err)
     })
-  } catch (err) {
-    console.log(err)
-  }
 }
 
 exports.editVolunteer = (req, res) => {
   const userId = req.params.userId
-  const query = { _id: userId }
-  const userd={
-    $set:{
-    "name": req.body.name,
-    "email": req.body.email,
-    "password": req.body.password,
-    "type": req.body.type,
-    "events": req.body.events  }}
-    const db = getDb()
-    db
-    .collection('users')
-    .updateOne(query,userd)
-    .then(updatedDocument => {
-      if(updatedDocument) {
-        console.log(`Successfully updated document: ${updatedDocument}.`)
-      } else {
-        console.log("No document matches the provided query.")
-      }
-      res.send(updatedDocument)
-      })
-    .catch(err => console.error(`Failed to find and update document: ${err}`))
+  const name = req.body.name
+  const email = req.body.email
+  const password = req.body.password
+  User.findById(userId)
+    .then((userData) => {
+      const user = new User(
+        name,
+        email,
+        password,
+        'volunteer',
+        userData.events,
+        userData._id
+      )
+      user
+        .save()
+        .then((result) => {
+          User.findByType('volunteer')
+            .then((users) => {
+              res.json({
+                volunteers: users,
+              })
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
 }
