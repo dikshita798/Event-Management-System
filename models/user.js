@@ -25,7 +25,7 @@ class User {
 
     return dbOp
       .then((result) => {
-        //console.log(result);
+        console.log(result);
       })
       .catch((err) => {
         console.log(err)
@@ -46,7 +46,30 @@ class User {
         console.log(err)
       })
   }
-
+  static deleteById(id){
+    const db = getDb()
+    return db
+    .collection('users')
+    .deleteOne({ _id: new mongodb.ObjectID(id)})
+    .then(result => {
+      console.log('Deleted')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
+  static FindByIdAndUpdate(id){
+    const db = getDb()
+    return db
+    .collection('users')
+    .FindOneAndUpdate({ _id: new mongodb.ObjectID(id)}, User, {new: true})
+    .then(result => {
+      console.log('Updated')
+    })
+    .catch(err => {
+      console.log(err)
+    })
+  }
   static findByType(type) {
     const db = getDb()
     return db
