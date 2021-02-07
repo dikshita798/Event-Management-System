@@ -6,6 +6,9 @@ const participantController = require('../controllers/participant')
 
 const router = express.Router()
 
+router.post('/login', volunteerController.loginVolunteer)
+router.post('/logout', volunteerController.logoutVolunteer)
+
 router.get('/participants', getParticipants)
 router.get('/participate', volunteerController.participate)
 router.get('/:eventId', participantController.getEvent)

@@ -8,6 +8,7 @@ const authRoutes = require('./routes/auth')
 const adminRoutes = require('./routes/admin')
 const volunteerRoutes = require('./routes/volunteer')
 const participantRoutes = require('./routes/participant')
+const { authenticateJWT } = require('./controllers/auth')
 const { mongoConnect } = require('./utils/database')
 
 const app = express()
@@ -41,8 +42,8 @@ app.use(
 
 app.use(authRoutes)
 app.use('/admin', adminRoutes)
-app.use('/volunteer', volunteerRoutes)
-app.use('/participant', participantRoutes)
+app.use('/volunteer', authenticateJWT, volunteerRoutes)
+app.use('/participant', authenticateJWT, participantRoutes)
 
 mongoConnect(() => {
   app.listen(3000)

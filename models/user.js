@@ -59,13 +59,23 @@ class User {
         console.log(err)
       })
   }
-  static FindByIdAndUpdate(id) {
+  static findByType2(type) {
     const db = getDb()
     return db
       .collection('users')
-      .FindOneAndUpdate({ _id: new mongodb.ObjectID(id) }, User, { new: true })
-      .then((result) => {
-        console.log('Updated')
+      .find(
+        { type: type },
+        {
+          projection: {
+            events: 0,
+            type: 0,
+          },
+        }
+      )
+      .toArray()
+      .then((users) => {
+        //console.log(user);
+        return users
       })
       .catch((err) => {
         console.log(err)
