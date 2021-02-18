@@ -1,6 +1,8 @@
 const User = require('../models/user')
 const Event = require('../models/event')
 
+
+
 exports.getParticipants = (req, res) => {
   User.findByType('participant')
     .then((users) => {
@@ -39,7 +41,8 @@ exports.getEvents = (req, res) => {
 
 exports.addVolunteer = (req, res) => {
   const name = req.body.name
-  const volunteer = new User(name, null, null, 'volunteer')
+  const email = req.body.email
+  const volunteer = new User(name, email, null, 'volunteer')
   volunteer
     .save()
     .then((result) => {

@@ -153,3 +153,52 @@ exports.refreshtoken = (req, res) => {
       console.log(err)
     })
 }
+
+exports.loginAdmin = (req, res) => {
+  const email = req.body.email
+  const password = req.body.password
+  //console.log(email, password)
+  User.findByType('admin')
+    .then((users) => {
+
+      let user
+      users.forEach((userData) => {
+        //console.log(userData.email, userData.password)
+        if (userData.email === email && userData.password === password) {
+          user = userData
+        }
+      })
+      if (user !== undefined) {
+        const refreshtoken = new RefreshToken(
+          user._id,
+          crypto.randomBytes(40).toString('hex'),
+          new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+        )
+        const accessToken = RefreshToken.generateJwtToken(user._id)
+        refreshtoken
+        .saveRefreshToken()
+        .then((result) => {
+          return res.json({
+            status: 'Logged In!',
+            user: {
+              id: user._id,
+              name: user.name,
+              email: user.email,
+            },
+            accesstoken: accessToken,
+            refreshtoken: refreshtoken.token,
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      } else {
+        res.json({
+          status: 'Invalid Credentials!',
+        })
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}

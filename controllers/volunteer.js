@@ -10,7 +10,7 @@ exports.loginVolunteer = (req, res) => {
     .then((users) => {
       let user
       users.forEach((userData) => {
-        //console.log(userData.email, userData.password)
+        console.log(userData.email, userData.password)
         if (userData.email === email && userData.password === password) {
           user = userData
         }

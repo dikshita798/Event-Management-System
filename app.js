@@ -41,7 +41,7 @@ app.use(
 )
 
 app.use(authRoutes)
-app.use('/admin', adminRoutes)
+app.use('/admin', authenticateJWT, adminRoutes)
 app.use('/volunteer', authenticateJWT, volunteerRoutes)
 app.use('/participant', authenticateJWT, participantRoutes)
 
