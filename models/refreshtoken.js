@@ -14,7 +14,7 @@ class RefreshToken {
 
   static generateJwtToken(userId) {
     // create a jwt token containing the user id that expires in 15 minutes
-    return jwt.sign({ id: userId }, secret, { expiresIn: '15m' })
+    return jwt.sign({ id: userId }, secret, { expiresIn: '24h' })
   }
 
   saveRefreshToken() {
