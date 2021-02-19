@@ -1,33 +1,28 @@
-common 
 
-/login
-/logout
-/register
----------------------------
-admin
-/admin/...
-get /participants  (list the participants)
-get /volunteers (list the volunteers)
-get /events (list the events)
+post /register
+post /login
+post /logout
+post /refreshtoken
+------------------------------------
+
+all the below routes starts with /user
+
+get /events
+get /participants
+get /volunteers
+get /event/:eventId
+get /participant/:userId
+
+post /register/:eventId
+
+//specifically admin routes (this also starts with /user)
+
 post /add-volunteer (add a volunteer)
 post /add-event (add an event)
-patch /edit-event/:eventId
+
 delete /delete-event/:eventId
-patch /edit-volunteer/:volunteerId
 delete /delete-volunteer/:volunteerId
-get /:eventId
-get /:userId
----------------------------
-volunteer
-/volunteer/..
-get /participants (list the participants for the )
-get /participate (handle events tab for volunteer)
-get /:eventId (get event description)
-post /register/:eventId (register for event)
-get /:userId
-------------------------------------
-participant
-/participant/..
-get /:eventId (get event description)
-post /register/:eventId (register for event)
+
+patch /edit-event/:eventId
+patch /edit-volunteer/:volunteerId
 

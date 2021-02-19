@@ -1,7 +1,17 @@
 const User = require('../models/user')
 const Event = require('../models/event')
 
-
+exports.getEvents = (req, res) => {
+  Event.fetchAll()
+    .then((events) => {
+      res.json({
+        events: events,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
 
 exports.getParticipants = (req, res) => {
   User.findByType('participant')
@@ -27,11 +37,75 @@ exports.getVolunteers = (req, res) => {
     })
 }
 
-exports.getEvents = (req, res) => {
-  Event.fetchAll()
-    .then((events) => {
+exports.registerForEvent = (req, res) => {
+  const eventId = req.params.eventId
+  const participantId = req.body.userId
+  User.findById(participantId).then((participantData) => {
+    Event.findById(eventId)
+      .then((event) => {
+        let registered = participantData.events
+        if (registered === undefined || registered === null) {
+          registered = [event._id]
+        } else {
+          registered.push(event._id)
+        }
+        const participant = new User(
+          participantData.name,
+          participantData.email,
+          participantData.password,
+          participantData.type,
+          registered,
+          participantData._id
+        )
+        participant
+          .save()
+          .then((result) => {
+            User.findById(participantData._id).then((participant) => {
+              Event.fetchAll().then((eventsData) => {
+                const events = []
+                eventsData.forEach((event) => {
+                  participant.events.forEach((e) => {
+                    if (e.equals(event._id)) {
+                      events.push(event)
+                    }
+                  })
+                })
+                res.json({
+                  events: events,
+                })
+              })
+            })
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  })
+}
+
+exports.getEvent = (req, res) => {
+  const eventId = req.params.eventId
+  Event.findById(eventId)
+    .then((event) => {
       res.json({
-        events: events,
+        event: event,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}
+
+exports.getUser = (req, res) => {
+  const userId = req.params.userId
+  User.findById(userId)
+    .then((user) => {
+      console.log(user)
+      res.json({
+        user: user,
       })
     })
     .catch((err) => {
@@ -113,19 +187,6 @@ exports.deleteVolunteer = (req, res) => {
     })
 }
 
-exports.getUser = (req, res) => {
-  const userId = req.params.userId
-  User.findById(userId)
-    .then((users) => {
-      console.log(users)
-      res.json({
-        status: 'success',
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
 exports.editEvent = (req, res) => {
   const eventId = req.params.eventId
   const name = req.body.name

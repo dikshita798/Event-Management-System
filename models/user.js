@@ -90,7 +90,6 @@ class User {
         {
           projection: {
             password: 0,
-            type: 0,
           },
         }
       )

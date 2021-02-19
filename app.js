@@ -5,9 +5,7 @@ const bodyParser = require('body-parser')
 const multer = require('multer')
 
 const authRoutes = require('./routes/auth')
-const adminRoutes = require('./routes/admin')
-const volunteerRoutes = require('./routes/volunteer')
-const participantRoutes = require('./routes/participant')
+const userRoutes = require('./routes/user')
 const { authenticateJWT } = require('./controllers/auth')
 const { mongoConnect } = require('./utils/database')
 
@@ -41,9 +39,7 @@ app.use(
 )
 
 app.use(authRoutes)
-app.use('/admin', authenticateJWT, adminRoutes)
-app.use('/volunteer', authenticateJWT, volunteerRoutes)
-app.use('/participant', authenticateJWT, participantRoutes)
+app.use('/user', authenticateJWT, userRoutes)
 
 mongoConnect(() => {
   app.listen(3000)
