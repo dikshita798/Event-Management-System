@@ -40,6 +40,35 @@ exports.getVolunteers = (req, res) => {
     })
 }
 
+exports.getEvent = (req, res) => {
+  const eventId = req.params.eventId
+  Event.findById(eventId)
+    .then((event) => {
+      res.json({
+        event: event,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      res.sendStatus(500)
+    })
+}
+
+exports.getUser = (req, res) => {
+  const userId = req.params.userId
+  User.findById(userId)
+    .then((user) => {
+      //console.log(user)
+      res.json({
+        user: user,
+      })
+    })
+    .catch((err) => {
+      console.log(err)
+      res.sendStatus(500)
+    })
+}
+
 exports.registerForEvent = (req, res) => {
   const eventId = req.params.eventId
   const participantId = req.body.userId
@@ -91,35 +120,6 @@ exports.registerForEvent = (req, res) => {
   })
 }
 
-exports.getEvent = (req, res) => {
-  const eventId = req.params.eventId
-  Event.findById(eventId)
-    .then((event) => {
-      res.json({
-        event: event,
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-      res.sendStatus(500)
-    })
-}
-
-exports.getUser = (req, res) => {
-  const userId = req.params.userId
-  User.findById(userId)
-    .then((user) => {
-      //console.log(user)
-      res.json({
-        user: user,
-      })
-    })
-    .catch((err) => {
-      console.log(err)
-      res.sendStatus(500)
-    })
-}
-
 exports.addVolunteer = (req, res) => {
   const name = req.body.name
   const email = req.body.email
@@ -148,10 +148,10 @@ exports.addEvent = (req, res) => {
   const name = req.body.name
   const startdate = req.body.startdate
   const enddate = req.body.enddate
-  const organizer = req.body.organizer
+  const volunteer = req.body.volunteer
   const description = req.body.description
 
-  const event = new Event(name, startdate, enddate, organizer, description)
+  const event = new Event(name, startdate, enddate, volunteer, description)
   event
     .save()
     .then((result) => {
@@ -221,7 +221,7 @@ exports.editEvent = (req, res) => {
   const name = req.body.name
   const startdate = req.body.startdate
   const enddate = req.body.enddate
-  const organizer = req.body.organizer
+  const volunteer = req.body.volunteer
   const description = req.body.description
   Event.findById(eventId)
     .then((eventData) => {
@@ -229,7 +229,7 @@ exports.editEvent = (req, res) => {
         name,
         startdate,
         enddate,
-        organizer,
+        volunteer,
         description,
         eventData._id
       )

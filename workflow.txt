@@ -1,28 +1,32 @@
+Routes                                  Required fields                         Response returned contains   
 
-post /register
-post /login
-post /logout
-post /refreshtoken
+
+post /register                          name email password type                message user(id, name, email, type)
+post /login                             email password type                     message user(id, name, email, type, events) accesstoken refreshtoken
+post /logout                                                                    message                        
+post /refreshtoken                      refreshtoken                            message accesstoken refreshtoken
 ------------------------------------
 
 all the below routes starts with /user
 
-get /events
-get /participants
-get /volunteers
-get /event/:eventId
-get /:userId
+get /events                             accesstoken                             events
+get /participants                       accesstoken                             participants
+get /volunteers                         accesstoken                             volunteers
+get /event/:eventId                     accesstoken                             event
+get /:userId                            accesstoken                             user
 
-post /register/:eventId
+post /register/:eventId                 accesstoken userId                      events
 
 //specifically admin routes (this also starts with /user)
 
-post /add-volunteer (add a volunteer)
-post /add-event (add an event)
+post /add-volunteer (add a volunteer)   accesstoken name email                  volunteers
+post /add-event (add an event)          accesstoken name startdate enddate      events
+                                        volunteer description    
 
-delete /delete-event/:eventId
-delete /delete-volunteer/:volunteerId
+delete /delete-event/:eventId           accesstoken                             message events
+delete /delete-volunteer/:userId        accesstoken                             message volunteers
 
-patch /edit-event/:eventId
-patch /edit-volunteer/:volunteerId
+patch /edit-event/:eventId              accesstoken name startdate enddate      events
+                                        volunteer description
+patch /edit-volunteer/:userId           accesstoken name email password         volunteers
 

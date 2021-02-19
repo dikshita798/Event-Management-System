@@ -3,11 +3,11 @@ const mongodb = require('mongodb')
 const getDb = require('../utils/database').getDb
 
 class Event {
-  constructor(name, startdate, enddate, organizer, description, id) {
+  constructor(name, startdate, enddate, volunteer, description, id) {
     this.name = name
     this.startdate = startdate
     this.enddate = enddate
-    this.organizer = organizer
+    this.volunteer = volunteer
     this.description = description
     this._id = id
   }

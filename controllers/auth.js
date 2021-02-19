@@ -76,7 +76,6 @@ exports.register = (req, res) => {
           name: user.name,
           email: user.email,
           type: user.type,
-          events: user.events,
         },
       })
     })
@@ -119,12 +118,13 @@ exports.login = (req, res) => {
             .saveRefreshToken()
             .then((result) => {
               return res.json({
-                status: 'Logged In!',
+                message: 'Logged In!',
                 user: {
                   id: user._id,
                   name: user.name,
                   email: user.email,
                   type: user.type,
+                  events: user.events,
                 },
                 accesstoken: accessToken,
                 refreshtoken: refreshtoken.token,
