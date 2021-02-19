@@ -7,7 +7,7 @@ router.get('/events', userController.getEvents)
 router.get('/participants', userController.getParticipants)
 router.get('/volunteers', userController.getVolunteers)
 router.get('/event/:eventId', userController.getEvent)
-router.get('/participant/:userId', userController.getUser)
+router.get('/:userId', userController.getUser)
 
 router.post('/register/:eventId', userController.registerForEvent)
 

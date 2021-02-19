@@ -11,20 +11,20 @@ exports.register = (req, res) => {
   const email = req.body.email
   const password = req.body.password
   const type = req.body.type
-  const availTypes = ['volunteer', 'participant', 'admin']
+  const availTypes = ['volunteer', 'participant']
   if (availTypes.indexOf(type) === -1) {
-    res.json({
-      status: 'Invalid Type!',
+    return res.status(400).send({
+      message: 'Invalid Type!',
     })
   } else if (
     name === undefined ||
     email === undefined ||
     password === undefined
   ) {
-    res.json({
-      status: 'Credentials cannot be NULL!',
+    return res.status(400).send({
+      message: 'Credentials cannot be NULL!',
     })
-  } else {
+  } else if (type === 'volunteer') {
     User.findByType(type)
       .then((users) => {
         let user
@@ -40,12 +40,12 @@ exports.register = (req, res) => {
             )
           }
         })
-        console.log(user)
         user
           .save()
           .then((result) => {
+            console.log(user)
             return res.json({
-              status: 'Registered!',
+              message: 'Registered!',
               user: {
                 id: user._id,
                 name: user.name,
@@ -57,11 +57,29 @@ exports.register = (req, res) => {
           })
           .catch((err) => {
             console.log(err)
+            res.sendStatus(500)
           })
       })
       .catch((err) => {
         console.log(err)
+        res.sendStatus(500)
       })
+  } else if (type === 'participant') {
+    let user
+    user = new User(name, email, password, type)
+    console.log(user)
+    user.save().then((result) => {
+      return res.json({
+        message: 'Registered!',
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          type: user.type,
+          events: user.events,
+        },
+      })
+    })
   }
 }
 
@@ -69,24 +87,27 @@ exports.login = (req, res) => {
   const email = req.body.email
   const password = req.body.password
   const type = req.body.type
+  console.log(email, password, type)
   const availTypes = ['volunteer', 'participant', 'admin']
   if (availTypes.indexOf(type) === -1) {
-    res.json({
-      status: 'Invalid Type!',
+    res.status(400).send({
+      message: 'Invalid Type!',
     })
   } else if (email === undefined || password === undefined) {
-    res.json({
-      status: 'Credentials cannot be NULL!',
+    res.status(400).send({
+      message: 'Credentials cannot be NULL!',
     })
   } else {
-    User.findByType(type)
+    User.findByType2(type)
       .then((users) => {
         let user
         users.forEach((userData) => {
+          console.log(userData)
           if (userData.email === email && userData.password === password) {
             user = userData
           }
         })
+        console.log(user)
         if (user !== undefined) {
           const refreshtoken = new RefreshToken(
             user._id,
@@ -111,22 +132,24 @@ exports.login = (req, res) => {
             })
             .catch((err) => {
               console.log(err)
+              res.sendStatus(500)
             })
         } else {
-          res.json({
-            status: 'Invalid Credentials!',
+          res.status(400).send({
+            message: 'Invalid Credentials!',
           })
         }
       })
       .catch((err) => {
         console.log(err)
+        res.sendStatus(500)
       })
   }
 }
 
 exports.logout = (req, res) => {
   res.json({
-    status: 'Logged Out!',
+    message: 'Logged Out!',
   })
 }
 
@@ -138,7 +161,9 @@ exports.authenticateJWT = (req, res, next) => {
     jwt.verify(token, secret, (err, user) => {
       if (err) {
         console.log('Invalid Auth Value')
-        return res.sendStatus(403)
+        return res.status(403).send({
+          message: 'Invalid Auth Value',
+        })
       }
       console.log('Authenticated')
       req.user = user
@@ -146,7 +171,9 @@ exports.authenticateJWT = (req, res, next) => {
     })
   } else {
     console.log('Auth Header Absent')
-    res.sendStatus(401)
+    res.status(401).send({
+      message: 'Auth Header Absent',
+    })
   }
 }
 
@@ -174,24 +201,28 @@ exports.refreshtoken = (req, res) => {
                 .saveRefreshToken()
                 .then((result) => {
                   res.json({
-                    status: 'Token renewed',
+                    message: 'Token renewed',
                     accesstoken: accessToken,
                     refreshtoken: newrefreshtoken.token,
                   })
                 })
                 .catch((err) => {
                   console.log(err)
+                  res.sendStatus(500)
                 })
             })
             .catch((err) => {
               console.log(err)
+              res.sendStatus(500)
             })
         })
         .catch((err) => {
           console.log(err)
+          res.sendStatus(500)
         })
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }

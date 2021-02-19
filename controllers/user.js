@@ -10,6 +10,7 @@ exports.getEvents = (req, res) => {
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -22,6 +23,7 @@ exports.getParticipants = (req, res) => {
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -34,6 +36,7 @@ exports.getVolunteers = (req, res) => {
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -78,10 +81,12 @@ exports.registerForEvent = (req, res) => {
           })
           .catch((err) => {
             console.log(err)
+            res.sendStatus(500)
           })
       })
       .catch((err) => {
         console.log(err)
+        res.sendStatus(500)
       })
   })
 }
@@ -96,6 +101,7 @@ exports.getEvent = (req, res) => {
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -103,13 +109,14 @@ exports.getUser = (req, res) => {
   const userId = req.params.userId
   User.findById(userId)
     .then((user) => {
-      console.log(user)
+      //console.log(user)
       res.json({
         user: user,
       })
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -128,10 +135,12 @@ exports.addVolunteer = (req, res) => {
         })
         .catch((err) => {
           console.log(err)
+          res.sendStatus(500)
         })
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -154,10 +163,12 @@ exports.addEvent = (req, res) => {
         })
         .catch((err) => {
           console.log(err)
+          res.sendStatus(500)
         })
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -165,12 +176,21 @@ exports.deleteEvent = (req, res) => {
   const eventId = req.params.eventId
   Event.deleteById(eventId)
     .then((result) => {
-      res.json({
-        status: 'Event Deleted',
-      })
+      Event.fetchAll()
+        .then((events) => {
+          res.json({
+            message: 'Event Deleted',
+            events: events,
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+          res.sendStatus(500)
+        })
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -178,12 +198,21 @@ exports.deleteVolunteer = (req, res) => {
   const userId = req.params.userId
   User.deleteById(userId)
     .then((result) => {
-      res.json({
-        status: 'Volunteer Deleted',
-      })
+      User.findByType('volunteer')
+        .then((users) => {
+          res.json({
+            message: 'Volunteer Deleted',
+            volunteers: users,
+          })
+        })
+        .catch((err) => {
+          console.log(err)
+          res.sendStatus(500)
+        })
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -215,14 +244,17 @@ exports.editEvent = (req, res) => {
             })
             .catch((err) => {
               console.log(err)
+              res.sendStatus(500)
             })
         })
         .catch((err) => {
           console.log(err)
+          res.sendStatus(500)
         })
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }
 
@@ -244,7 +276,7 @@ exports.editVolunteer = (req, res) => {
       user
         .save()
         .then((result) => {
-          User.findByType('volunteer')
+          User.findByType2('volunteer')
             .then((users) => {
               res.json({
                 volunteers: users,
@@ -252,13 +284,16 @@ exports.editVolunteer = (req, res) => {
             })
             .catch((err) => {
               console.log(err)
+              res.sendStatus(500)
             })
         })
         .catch((err) => {
           console.log(err)
+          res.sendStatus(500)
         })
     })
     .catch((err) => {
       console.log(err)
+      res.sendStatus(500)
     })
 }

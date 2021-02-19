@@ -11,7 +11,7 @@ get /events
 get /participants
 get /volunteers
 get /event/:eventId
-get /participant/:userId
+get /:userId
 
 post /register/:eventId
 

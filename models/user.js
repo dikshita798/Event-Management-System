@@ -63,15 +63,7 @@ class User {
     const db = getDb()
     return db
       .collection('users')
-      .find(
-        { type: type },
-        {
-          projection: {
-            events: 0,
-            type: 0,
-          },
-        }
-      )
+      .find({ type: type })
       .toArray()
       .then((users) => {
         //console.log(user);
