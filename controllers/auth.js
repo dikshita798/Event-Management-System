@@ -86,28 +86,29 @@ exports.register = (req, res) => {
 exports.login = (req, res) => {
   const email = req.body.email
   const password = req.body.password
-  const type = req.body.type
-  console.log(email, password, type)
-  const availTypes = ['volunteer', 'participant', 'admin']
-  if (availTypes.indexOf(type) === -1) {
-    res.status(400).send({
-      message: 'Invalid Type!',
-    })
-  } else if (email === undefined || password === undefined) {
+  // const type = req.body.type
+  console.log(email, password)
+  // const availTypes = ['volunteer', 'participant', 'admin']
+  // if (availTypes.indexOf(type) === -1) {
+  //   res.status(400).send({
+  //     message: 'Invalid Type!',
+  //   })
+  // } else
+   if (email === undefined || password === undefined) {
     res.status(400).send({
       message: 'Credentials cannot be NULL!',
     })
   } else {
-    User.findByType2(type)
-      .then((users) => {
-        let user
-        users.forEach((userData) => {
-          console.log(userData)
-          if (userData.email === email && userData.password === password) {
-            user = userData
-          }
-        })
-        console.log(user)
+    User.findByMail(email, password)
+      .then((user) => {
+        // let user
+        // users.forEach((userData) => {
+        //   console.log(userData)
+        //   if (userData.email === email && userData.password === password) {
+        //     user = userData
+        //   }
+        // })
+        // console.log(user)
         if (user !== undefined) {
           const refreshtoken = new RefreshToken(
             user._id,
@@ -118,7 +119,7 @@ exports.login = (req, res) => {
           refreshtoken
             .saveRefreshToken()
             .then((result) => {
-              return res.json({
+              return res.status(200).json({
                 status: 'Logged In!',
                 user: {
                   id: user._id,

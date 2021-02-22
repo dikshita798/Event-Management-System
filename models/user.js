@@ -46,6 +46,20 @@ class User {
         console.log(err)
       })
   }
+  static findByMail(email, password) {
+    const db = getDb()
+    return db
+      .collection('users')
+      .find({ email: email, password: password})
+      .next()
+      .then((user) => {
+        //console.log(user);
+        return user
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
   static deleteById(id) {
     const db = getDb()
     return db
