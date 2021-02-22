@@ -76,7 +76,6 @@ exports.register = (req, res) => {
           name: user.name,
           email: user.email,
           type: user.type,
-          events: user.events,
         },
       })
     })
@@ -126,6 +125,7 @@ exports.login = (req, res) => {
                   name: user.name,
                   email: user.email,
                   type: user.type,
+                  events: user.events,
                 },
                 accesstoken: accessToken,
                 refreshtoken: refreshtoken.token,
